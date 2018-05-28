@@ -48,7 +48,7 @@ class add_group_1(unittest.TestCase):
         self.create_group(wd, Group("Name 2", "Header 2", "Footer 2"))
         wd.find_element_by_link_text("group page").click()
         wd.find_element_by_link_text("Logout").click()
-        wd.find_element_by_name("user").click()
+    
 
     def tearDown(self):
         self.wd.quit()
