@@ -3,6 +3,7 @@ from selenium.webdriver.firefox.webdriver import WebDriver
 import unittest
 from contact import Contact
 from login import userlogin
+import time
 
 
 def is_alert_present(wd):
@@ -33,7 +34,11 @@ class add_contact(unittest.TestCase):
         wd.find_element_by_name("nickname").click()
         wd.find_element_by_name("nickname").clear()
         wd.find_element_by_name("nickname").send_keys(contact.nickname)
-        # wd.find_element_by_name("photo").click()
+
+        photoinput = wd.find_element_by_name("photo")
+        photoinput.send_keys(contact.photopath)
+        time.sleep(10)
+
         wd.find_element_by_name("title").click()
         wd.find_element_by_name("title").clear()
         wd.find_element_by_name("title").send_keys(contact.title)
@@ -111,14 +116,15 @@ class add_contact(unittest.TestCase):
         wd.get("http://localhost/addressbook/index.php")
         userlogin(wd, "admin", "secret")
 
-        self.create_contact(wd, Contact(firstname="Alla 4", initials="K.", lastname="Ivanova", nickname="AllaI",
+        self.create_contact(wd, Contact(firstname="Aliona 3", initials="K.", lastname="Ivanova", nickname="AllaI",
                            title="Mrs.", company="Nothing", address="Sadovoe 34-34-2", homephone="495 3332211",
                            mobilephone="965 2223344",
                            workphone="965 1112233", fax="965 8889988", email="afel1@mail.ru", email2="afel2@mail.ru",
                            email3="afel3@mail.ru", homepage="www.test.com",
                            bdayoption="option[10]", bmonthoption="option[2]", byear="1980",
                            adayoption="option[17]", amonthoption="option[4]", ayear="2000",
-                           address2="Seletor str d. 98 kv.34", phone2="www.home.com", notes="Very important contact"))
+                           address2="Seletor str d. 98 kv.34", phone2="www.home.com", notes="Very important contact",
+                                        photopath="/Users/lena/Desktop/cat1.jpg"))
 
         wd.find_element_by_link_text("Logout").click()
 
