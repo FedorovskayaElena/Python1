@@ -2,7 +2,7 @@
 from selenium.webdriver.firefox.webdriver import WebDriver
 import unittest
 from contact import Contact
-from login import userlogin
+import session
 import time
 
 
@@ -113,8 +113,7 @@ class add_contact(unittest.TestCase):
     def test_add_contact(self):
 
         wd = self.wd
-        wd.get("http://localhost/addressbook/index.php")
-        userlogin(wd, "admin", "secret")
+        session.login(wd, "admin", "secret")
 
         self.create_contact(wd, Contact(firstname="Aliona 3", initials="K.", lastname="Ivanova", nickname="AllaI",
                            title="Mrs.", company="Nothing", address="Sadovoe 34-34-2", homephone="495 3332211",
@@ -126,7 +125,7 @@ class add_contact(unittest.TestCase):
                            address2="Seletor str d. 98 kv.34", phone2="www.home.com", notes="Very important contact",
                                         photopath="/Users/lena/Desktop/cat1.jpg"))
 
-        wd.find_element_by_link_text("Logout").click()
+        session.logout(wd)
 
 
 if __name__ == '__main__':

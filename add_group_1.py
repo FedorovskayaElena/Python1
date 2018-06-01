@@ -2,7 +2,7 @@
 from selenium.webdriver.firefox.webdriver import WebDriver
 import unittest
 from group import Group
-from login import userlogin
+import session
 
 def is_alert_present(wd):
     try:
@@ -30,16 +30,13 @@ class add_group_1(unittest.TestCase):
         wd.find_element_by_name("group_footer").clear()
         wd.find_element_by_name("group_footer").send_keys(group.footer)
         wd.find_element_by_name("submit").click()
-
+        wd.find_element_by_link_text("group page").click()
 
     def test_add_group(self):
         wd = self.wd
-        # open group page
-        wd.get("http://localhost/addressbook/group.php")
-        userlogin(wd, "admin", "secret")
+        session.login(wd, "admin", "secret")
         self.create_group(wd, Group("Name 2", "Header 2", "Footer 2"))
-        wd.find_element_by_link_text("group page").click()
-        wd.find_element_by_link_text("Logout").click()
+        session.logout(wd)
     
 
     def tearDown(self):
