@@ -1,21 +1,19 @@
 # -*- coding: utf-8 -*-
-import unittest
+import pytest
 from contact import Contact
 from application import Application
 
-class add_contact(unittest.TestCase):
-    def setUp(self):
-        self.app = Application()
+@pytest.fixture
+def app(request):
+    fixture = Application()
+    request.addfinalizer(fixture.destroy)
+    return fixture
 
+def test_add_contact(app):
 
-    def tearDown(self):
-        self.app.destroy()
+    app.login("admin", "secret")
 
-    def test_add_contact(self):
-
-        self.app.login("admin", "secret")
-
-        self.app.create_contact(Contact(firstname="Aliona 3", initials="K.", lastname="Ivanova", nickname="AllaI",
+    app.create_contact(Contact(firstname="Aliona 3", initials="K.", lastname="Ivanova", nickname="AllaI",
                            title="Mrs.", company="Nothing", address="Sadovoe 34-34-2", homephone="495 3332211",
                            mobilephone="965 2223344",
                            workphone="965 1112233", fax="965 8889988", email="afel1@mail.ru", email2="afel2@mail.ru",
@@ -25,9 +23,7 @@ class add_contact(unittest.TestCase):
                            address2="Seletor str d. 98 kv.34", phone2="www.home.com", notes="Very important contact",
                                         photopath="/Users/lena/Desktop/cat1.jpg"))
 
-        self.app.logout()
+    app.logout()
 
 
 
-if __name__ == '__main__':
-    unittest.main()
