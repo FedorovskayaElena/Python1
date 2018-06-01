@@ -2,7 +2,6 @@
 from selenium.webdriver.firefox.webdriver import WebDriver
 import unittest
 from contact import Contact
-import session
 import time
 
 
@@ -19,8 +18,25 @@ class add_contact(unittest.TestCase):
                             firefox_binary="/Applications/Firefox.app/Contents/MacOS/firefox")
         self.wd.implicitly_wait(60)
 
+    def login(self, username, userpassword):
+        wd = self.wd
+        # open group page
+        wd.get("http://localhost/addressbook/group.php")
+        # set username and password
+        wd.find_element_by_name("user").click()
+        wd.find_element_by_name("user").clear()
+        wd.find_element_by_name("user").send_keys(username)
+        wd.find_element_by_name("pass").click()
+        wd.find_element_by_name("pass").clear()
+        wd.find_element_by_name("pass").send_keys(userpassword)
+        wd.find_element_by_xpath("//form[@id='LoginForm']/input[3]").click()
 
-    def create_contact(self, wd, contact):
+    def logout(self):
+        wd = self.wd
+        wd.find_element_by_link_text("Logout").click()
+
+    def create_contact(self, contact):
+        wd = self.wd
         wd.find_element_by_link_text("add new").click()
         wd.find_element_by_name("firstname").click()
         wd.find_element_by_name("firstname").clear()
@@ -112,10 +128,9 @@ class add_contact(unittest.TestCase):
 
     def test_add_contact(self):
 
-        wd = self.wd
-        session.login(wd, "admin", "secret")
+        self.login("admin", "secret")
 
-        self.create_contact(wd, Contact(firstname="Aliona 3", initials="K.", lastname="Ivanova", nickname="AllaI",
+        self.create_contact(Contact(firstname="Aliona 3", initials="K.", lastname="Ivanova", nickname="AllaI",
                            title="Mrs.", company="Nothing", address="Sadovoe 34-34-2", homephone="495 3332211",
                            mobilephone="965 2223344",
                            workphone="965 1112233", fax="965 8889988", email="afel1@mail.ru", email2="afel2@mail.ru",
@@ -125,7 +140,7 @@ class add_contact(unittest.TestCase):
                            address2="Seletor str d. 98 kv.34", phone2="www.home.com", notes="Very important contact",
                                         photopath="/Users/lena/Desktop/cat1.jpg"))
 
-        session.logout(wd)
+        self.logout()
 
 
 if __name__ == '__main__':
