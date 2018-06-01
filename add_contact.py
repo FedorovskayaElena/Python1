@@ -37,7 +37,7 @@ class add_contact(unittest.TestCase):
 
         photoinput = wd.find_element_by_name("photo")
         photoinput.send_keys(contact.photopath)
-        time.sleep(10)
+        time.sleep(3)
 
         wd.find_element_by_name("title").click()
         wd.find_element_by_name("title").clear()

@@ -31,16 +31,8 @@ class add_group_1(unittest.TestCase):
         wd.find_element_by_name("group_footer").send_keys(group.footer)
         wd.find_element_by_name("submit").click()
 
-    def login(self, wd, username, userpassword):
-        wd.find_element_by_name("user").click()
-        wd.find_element_by_name("user").clear()
-        wd.find_element_by_name("user").send_keys(username)
-        wd.find_element_by_name("pass").click()
-        wd.find_element_by_name("pass").clear()
-        wd.find_element_by_name("pass").send_keys(userpassword)
-        wd.find_element_by_xpath("//form[@id='LoginForm']/input[3]").click()
 
-    def test_add_group_1(self):
+    def test_add_group(self):
         wd = self.wd
         # open group page
         wd.get("http://localhost/addressbook/group.php")
