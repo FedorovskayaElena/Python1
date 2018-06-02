@@ -5,7 +5,7 @@ class SessionHelper:
     def login(self, username, userpassword):
         wd = self.app.wd
         # open group page
-        wd.get("http://localhost/addressbook/group.php")
+        self.app.open_home_page()
         # set username and password
         wd.find_element_by_name("user").click()
         wd.find_element_by_name("user").clear()
