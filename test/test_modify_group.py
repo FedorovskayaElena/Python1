@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from model.group import Group
 
-def test_add_group(app):
+def test_modify_group(app):
     app.session.login("admin", "secret")
-    app.group.create(Group("Name 112", "Header 2", "Footer 2"))
+    app.group.modify_first(Group("New Name", "New Header", "New Footer"))
     app.session.logout()
