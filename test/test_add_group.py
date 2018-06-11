@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 from model.group import Group
 
+
 def test_add_group(app):
-    app.session.login("admin", "secret")
-    app.group.create(Group("Name 112", "Header 2", "Footer 2"))
-    app.session.logout()
+    app.group.create(Group("Name 001", "Header 2", "Footer 2"))
+
+
+def test_add_group_1(app):
+    app.group.create(Group("Name 002", "Header 2", "Footer 2"))
