@@ -14,5 +14,5 @@ def test_modify_contact(app):
                                         photopath="/Users/lena/Desktop/cat5.jpg"))
 
 
-# def test_modify_contact_somefields(app):
-#    app.contact.modify_first(Contact(lastname="New Petrova", mobilephone="", workphone=""))
+def test_modify_contact_somefields(app):
+    app.contact.modify_first(Contact(lastname="New Petrova", mobilephone="", workphone=""))

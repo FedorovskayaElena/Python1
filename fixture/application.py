@@ -7,7 +7,7 @@ class Application:
     def __init__(self):
         self.wd = WebDriver(capabilities={"marionette": False},
                             firefox_binary="/Applications/Firefox.app/Contents/MacOS/firefox")
-        self.wd.implicitly_wait(60)
+        self.wd.implicitly_wait(3)
         self.session = SessionHelper(self)
         self.group = GroupHelper(self)
         self.contact = ContactHelper(self)
