@@ -89,3 +89,8 @@ class ContactHelper:
         self.type_in_field("phone2", contact.phone2)
         self.type_in_field("notes", contact.notes)
 
+
+    def count(self):
+        wd = self.app.wd
+        self.open_contacts_page()
+        return len(wd.find_elements_by_name("selected[]"))
