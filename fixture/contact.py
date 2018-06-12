@@ -14,7 +14,7 @@ class ContactHelper:
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         time.sleep(1)
         wd.switch_to_alert().accept()
-        time.sleep(3)
+        time.sleep(1)
         self.open_contacts_page()
 
     def create(self, contact):
@@ -23,6 +23,7 @@ class ContactHelper:
         wd.find_element_by_link_text("add new").click()
         self.fill_contact_fields(contact)
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
+        self.open_contacts_page()
 
     def modify_first(self, contact):
         wd = self.app.wd
@@ -34,10 +35,12 @@ class ContactHelper:
         self.fill_contact_fields(contact)
         # клик по кнопке Update
         wd.find_element_by_name("update").click()
+        self.open_contacts_page()
 
     def open_contacts_page(self):
         wd = self.app.wd
-        wd.find_element_by_link_text("home").click()
+        if not wd.current_url.endswith("/index.php"):
+            wd.find_element_by_link_text("home").click()
 
     def select_first_contact(self):
         wd = self.app.wd
@@ -88,7 +91,6 @@ class ContactHelper:
         self.type_in_field("address2", contact.address2)
         self.type_in_field("phone2", contact.phone2)
         self.type_in_field("notes", contact.notes)
-
 
     def count(self):
         wd = self.app.wd

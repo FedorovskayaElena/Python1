@@ -3,7 +3,7 @@ from model.contact import Contact
 
 
 def test_add_contact(app):
-    app.contact.create(Contact(firstname="Алена 11", initials="K.", lastname="Петрова", nickname="AllaI",
+    app.contact.create(Contact(firstname="Абрахам 11", initials="K.", lastname="Петрова", nickname="AllaI",
                            title="Mrs.", company="Nothing", address="Sadovoe 34-34-2", homephone="495 3332211",
                            mobilephone="965 2223344",
                            workphone="965 1112233", fax="965 8889988", email="afel1@mail.ru", email2="afel2@mail.ru",
@@ -13,7 +13,7 @@ def test_add_contact(app):
                            address2="Seletor str d. 98 kv.34", phone2="www.home.com", notes="Very important contact",
                                         photopath="/Users/lena/Desktop/cat1.jpg"))
 
-    app.contact.create(Contact(firstname="Марина 22", initials="K.", lastname="Петрова", nickname="AllaI",
+    app.contact.create(Contact(firstname="Абрахам 22", initials="K.", lastname="Петрова", nickname="AllaI",
                            title="Mrs.", company="Nothing", address="Sadovoe 34-34-2", homephone="495 3332211",
                            mobilephone="965 2223344",
                            workphone="965 1112233", fax="965 8889988", email="afel1@mail.ru", email2="afel2@mail.ru",
