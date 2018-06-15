@@ -1,4 +1,5 @@
 import time
+from model.contact import Contact
 
 
 class ContactHelper:
@@ -96,3 +97,20 @@ class ContactHelper:
         wd = self.app.wd
         self.open_contacts_page()
         return len(wd.find_elements_by_name("selected[]"))
+
+    def get_contacts_list(self):
+        wd = self.app.wd
+        self.open_contacts_page()
+        contacts_list = []
+        for element in wd.find_elements_by_css_selector("tr[name='entry']"):
+            textid = element.find_element_by_css_selector("td>input[name='selected[]']").get_attribute("value")
+            textlast = element.find_element_by_css_selector("td+td").get_attribute("innerText")
+            textfirst = element.find_element_by_css_selector("td+td+td").get_attribute("innerText")
+            # print("ok")
+            # print("ID:" + textid)
+            # print("Last:" + textlast)
+            # print("First:" + textfirst)
+            contacts_list.append(Contact(firstname=textfirst, lastname=textlast, contact_id=textid))
+        return contacts_list
+
+
