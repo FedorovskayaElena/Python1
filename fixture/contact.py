@@ -16,6 +16,7 @@ class ContactHelper:
         time.sleep(1)
         wd.switch_to_alert().accept()
         time.sleep(1)
+        self.contacts_cache = None
         self.open_contacts_page()
 
     def create(self, contact):
@@ -24,6 +25,7 @@ class ContactHelper:
         wd.find_element_by_link_text("add new").click()
         self.fill_contact_fields(contact)
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
+        self.contacts_cache = None
         self.open_contacts_page()
 
     def modify_first(self, contact):
@@ -36,6 +38,7 @@ class ContactHelper:
         self.fill_contact_fields(contact)
         # клик по кнопке Update
         wd.find_element_by_name("update").click()
+        self.contacts_cache = None
         self.open_contacts_page()
 
     def open_contacts_page(self):
@@ -98,19 +101,22 @@ class ContactHelper:
         self.open_contacts_page()
         return len(wd.find_elements_by_name("selected[]"))
 
+    contacts_cache = None
+
     def get_contacts_list(self):
         wd = self.app.wd
-        self.open_contacts_page()
-        contacts_list = []
-        for element in wd.find_elements_by_css_selector("tr[name='entry']"):
-            textid = element.find_element_by_css_selector("td>input[name='selected[]']").get_attribute("value")
-            textlast = element.find_element_by_css_selector("td+td").get_attribute("innerText")
-            textfirst = element.find_element_by_css_selector("td+td+td").get_attribute("innerText")
-            # print("ok")
-            # print("ID:" + textid)
-            # print("Last:" + textlast)
-            # print("First:" + textfirst)
-            contacts_list.append(Contact(firstname=textfirst, lastname=textlast, contact_id=textid))
-        return contacts_list
+        if self.contacts_cache is None:
+            self.open_contacts_page()
+            self.contacts_cache = []
+            for element in wd.find_elements_by_css_selector("tr[name='entry']"):
+                textid = element.find_element_by_css_selector("td>input[name='selected[]']").get_attribute("value")
+                textlast = element.find_element_by_css_selector("td+td").get_attribute("innerText")
+                textfirst = element.find_element_by_css_selector("td+td+td").get_attribute("innerText")
+                # print("ok")
+                # print("ID:" + textid)
+                # print("Last:" + textlast)
+                # print("First:" + textfirst)
+                self.contacts_cache.append(Contact(firstname=textfirst, lastname=textlast, contact_id=textid))
+        return list(self.contacts_cache)
 
 
