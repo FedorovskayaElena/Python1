@@ -7,10 +7,13 @@ class ContactHelper:
         self.app = app
 
     def delete_first(self):
+        self.delete_by_index(0)
+
+    def delete_by_index(self, index):
         wd = self.app.wd
         self.open_contacts_page()
         # select first contact
-        self.select_first_contact()
+        self.select_contact_by_index(index)
         # click Delete button
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         time.sleep(1)
@@ -29,17 +32,26 @@ class ContactHelper:
         self.open_contacts_page()
 
     def modify_first(self, contact):
+        self.modify_by_index(contact, 0)
+
+    def modify_by_index(self, contact, index):
         wd = self.app.wd
         self.open_contacts_page()
         # select first contact
-        self.select_first_contact()
+        self.select_contact_by_index(index)
         # click Edit button
-        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
+        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[" + str(2+index) + "]/td[8]/a/img").click()
         self.fill_contact_fields(contact)
         # клик по кнопке Update
         wd.find_element_by_name("update").click()
         self.contacts_cache = None
         self.open_contacts_page()
+
+    # for element in wd.find_elements_by_css_selector("tr[name='entry']"):
+    #     textid = element.find_element_by_css_selector("td>input[name='selected[]']").get_attribute("value")
+    #     textlast = element.find_element_by_css_selector("td+td").get_attribute("innerText")
+    #     textfirst = element.find_element_by_css_selector("td+td+td").get_attribute("innerText")
+
 
     def open_contacts_page(self):
         wd = self.app.wd
@@ -47,8 +59,11 @@ class ContactHelper:
             wd.find_element_by_link_text("home").click()
 
     def select_first_contact(self):
+        self.select_contact_by_index(0)
+
+    def select_contact_by_index(self, index):
         wd = self.app.wd
-        wd.find_element_by_name("selected[]").click()
+        wd.find_elements_by_name("selected[]")[index].click()
 
     def type_in_field(self, field_name, text):
         wd = self.app.wd
@@ -119,4 +134,7 @@ class ContactHelper:
                 self.contacts_cache.append(Contact(firstname=textfirst, lastname=textlast, contact_id=textid))
         return list(self.contacts_cache)
 
-
+    # def print_css_locator(self):
+    #     wd = self.app.wd
+    #     elements = wd.find_elements_by_css_selector("tr[name='entry']")
+    #     print(elements[0].find_element_by_css_selector("td:nth-child(7) > a").get_attribute("href"))

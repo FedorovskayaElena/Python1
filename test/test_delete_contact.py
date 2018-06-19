@@ -1,21 +1,24 @@
 # -*- coding: utf-8 -*-
 from model.contact import Contact
+from random import randrange
 
 
-def test_delete_first_contact(app):
+def test_delete_contact(app):
     if app.contact.count() == 0:
         app.contact.create(Contact(firstname="Марина Added from test_delete", lastname="Петрова",
                            title="Mrs.", company="Nothing", address="Sadovoe 34-34-2", homephone="495 3332211",
                            mobilephone="965 2223344",
                            workphone="965 1112233", fax="965 8889988"))
     old_contacts_list = app.contact.get_contacts_list()
-    app.contact.delete_first()
+    delete_index = randrange(len(old_contacts_list))
+    print("Random index 1: " + str(delete_index))
+    app.contact.delete_by_index(delete_index)
     assert len(old_contacts_list) - 1 == app.contact.count()
     new_contacts_list = app.contact.get_contacts_list()
     print("")
     print(old_contacts_list)
     print(new_contacts_list)
-    old_contacts_list[0:1] = []
+    old_contacts_list[delete_index:delete_index+1] = []
     print("Deleted:")
     print(old_contacts_list)
     print("Sorted:")
@@ -24,20 +27,22 @@ def test_delete_first_contact(app):
     assert sorted(old_contacts_list,  key=lambda gr: gr.contact_id) == sorted(new_contacts_list,  key=lambda gr: gr.contact_id)
 
 
-def test_delete_first_contact_1(app):
+def test_delete_contact_1(app):
     if app.contact.count() == 0:
         app.contact.create(Contact(firstname="Марина Added from test_delete", lastname="Петрова",
                            title="Mrs.", company="Nothing", address="Sadovoe 34-34-2", homephone="495 3332211",
                            mobilephone="965 2223344",
                            workphone="965 1112233", fax="965 8889988"))
     old_contacts_list = app.contact.get_contacts_list()
-    app.contact.delete_first()
+    delete_index = randrange(len(old_contacts_list))
+    print("Random index 1: " + str(delete_index))
+    app.contact.delete_by_index(delete_index)
     assert len(old_contacts_list) - 1 == app.contact.count()
     new_contacts_list = app.contact.get_contacts_list()
     print("")
     print(old_contacts_list)
     print(new_contacts_list)
-    old_contacts_list[0:1] = []
+    old_contacts_list[delete_index:delete_index+1] = []
     print("Deleted:")
     print(old_contacts_list)
     print("Sorted:")
