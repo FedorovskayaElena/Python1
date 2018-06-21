@@ -11,21 +11,17 @@ def test_modify_contact(app):
                            workphone="965 1112233", fax="965 8889988"))
     old_contacts_list = app.contact.get_contacts_list()
     modified_index = randrange(len(old_contacts_list))
-    print("Random index: " + str(modified_index))
-    modified_contact = Contact(firstname="Изменение им 3", lastname=old_contacts_list[modified_index].lastname,
+    print("Random index: %s" % str(modified_index))
+    modified_contact = Contact(firstname="Абс новое им 3", lastname=old_contacts_list[modified_index].lastname,
                                contact_id=old_contacts_list[modified_index].contact_id)
     app.contact.modify_by_index(modified_contact, modified_index)
     assert len(old_contacts_list) == app.contact.count()
     new_contacts_list = app.contact.get_contacts_list()
-    print("")
-    print(old_contacts_list)
-    print(new_contacts_list)
+    print("\n%s\n%s" % (old_contacts_list, new_contacts_list))
     old_contacts_list[modified_index] = modified_contact
-    print("Modified:")
-    print(old_contacts_list)
-    print("Sorted:")
-    print(sorted(old_contacts_list, key=lambda g: g.contact_id))
-    print(sorted(new_contacts_list, key=lambda g: g.contact_id))
+    print("Modified:\n%s" % old_contacts_list)
+    print("Sorted:\n%s\n%s" % (sorted(old_contacts_list, key=lambda g: g.contact_id),
+                               sorted(new_contacts_list, key=lambda g: g.contact_id)))
     assert sorted(old_contacts_list, key=lambda g: g.contact_id) == sorted(new_contacts_list, key=lambda g: g.contact_id)
 
 
@@ -37,21 +33,17 @@ def test_modify_contact_1(app):
                            workphone="965 1112233", fax="965 8889988"))
     old_contacts_list = app.contact.get_contacts_list()
     modified_index = randrange(len(old_contacts_list))
-    print("Random index: " + str(modified_index))
+    print("Random index 2: %s" % str(modified_index))
     modified_contact = Contact(firstname="КыИзменение им 4", lastname=old_contacts_list[modified_index].lastname,
                                contact_id=old_contacts_list[modified_index].contact_id)
     app.contact.modify_by_index(modified_contact, modified_index)
     assert len(old_contacts_list) == app.contact.count()
     new_contacts_list = app.contact.get_contacts_list()
-    print("")
-    print(old_contacts_list)
-    print(new_contacts_list)
+    print("\n%s\n%s" % (old_contacts_list, new_contacts_list))
     old_contacts_list[modified_index] = modified_contact
-    print("Modified:")
-    print(old_contacts_list)
-    print("Sorted:")
-    print(sorted(old_contacts_list, key=lambda g: g.contact_id))
-    print(sorted(new_contacts_list, key=lambda g: g.contact_id))
+    print("Modified:\n%s" % old_contacts_list)
+    print("Sorted:\n%s\n%s" % (sorted(old_contacts_list, key=lambda g: g.contact_id),
+                               sorted(new_contacts_list, key=lambda g: g.contact_id)))
     assert sorted(old_contacts_list, key=lambda g: g.contact_id) == sorted(new_contacts_list, key=lambda g: g.contact_id)
 
 

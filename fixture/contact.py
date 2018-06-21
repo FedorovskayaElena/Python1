@@ -40,18 +40,12 @@ class ContactHelper:
         # select first contact
         self.select_contact_by_index(index)
         # click Edit button
-        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[" + str(2+index) + "]/td[8]/a/img").click()
+        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[%s]/td[8]/a" % str(2 + index)).click()
         self.fill_contact_fields(contact)
         # клик по кнопке Update
         wd.find_element_by_name("update").click()
         self.contacts_cache = None
         self.open_contacts_page()
-
-    # for element in wd.find_elements_by_css_selector("tr[name='entry']"):
-    #     textid = element.find_element_by_css_selector("td>input[name='selected[]']").get_attribute("value")
-    #     textlast = element.find_element_by_css_selector("td+td").get_attribute("innerText")
-    #     textfirst = element.find_element_by_css_selector("td+td+td").get_attribute("innerText")
-
 
     def open_contacts_page(self):
         wd = self.app.wd
@@ -124,13 +118,11 @@ class ContactHelper:
             self.open_contacts_page()
             self.contacts_cache = []
             for element in wd.find_elements_by_css_selector("tr[name='entry']"):
-                textid = element.find_element_by_css_selector("td>input[name='selected[]']").get_attribute("value")
-                textlast = element.find_element_by_css_selector("td+td").get_attribute("innerText")
-                textfirst = element.find_element_by_css_selector("td+td+td").get_attribute("innerText")
-                # print("ok")
-                # print("ID:" + textid)
-                # print("Last:" + textlast)
-                # print("First:" + textfirst)
+                tds = element.find_elements_by_css_selector("td")
+                textid = tds[0].find_element_by_css_selector("input[name='selected[]']").get_attribute("value")
+                textlast = tds[1].get_attribute("innerText")
+                textfirst = tds[2].get_attribute("innerText")
+                # print("Contact list ID: %s\nLast: %s\nFirst: %s" % (str(textid), textlast, textfirst))
                 self.contacts_cache.append(Contact(firstname=textfirst, lastname=textlast, contact_id=textid))
         return list(self.contacts_cache)
 
