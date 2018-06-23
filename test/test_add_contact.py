@@ -1,5 +1,15 @@
 # -*- coding: utf-8 -*-
 from model.contact import Contact
+from random import randrange
+import time
+
+
+def test_open_page(app):
+    time.sleep(3)
+    app.contact.open_view_contact_page(app.contact.count()-1)
+    time.sleep(3)
+    app.contact.open_edit_contact_page(app.contact.count() - 1)
+    time.sleep(3)
 
 
 def test_add_contact(app):
