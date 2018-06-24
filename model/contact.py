@@ -6,7 +6,8 @@ class Contact:
                  address=None, homephone=None, mobilephone=None, workphone=None, fax=None,
                  email=None, email2=None, email3=None, homepage=None,
                  bdayoption=None, bmonthoption=None, byear=None, adayoption=None, amonthoption=None, ayear=None,
-                 address2=None, phone2=None, notes=None, photopath=None, contact_id=None):
+                 address2=None, phone2=None, notes=None, photopath=None, contact_id=None,
+                 all_phones_from_homepage=None, all_emails_from_homepage=None, all_content_from_viewpage=None):
         self.firstname = firstname
         self.initials = initials
         self.lastname = lastname
@@ -33,6 +34,10 @@ class Contact:
         self.notes = notes
         self.photopath = photopath
         self.contact_id = contact_id
+        self.all_phones_from_homepage = all_phones_from_homepage
+        self.all_emails_from_homepage = all_emails_from_homepage
+        self.all_content_from_viewpage = all_content_from_viewpage
+
 
     def __eq__(self, other):
         return (self.contact_id is None or other.contact_id is None or self.contact_id == other.contact_id) and \

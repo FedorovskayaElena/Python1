@@ -1,43 +1,66 @@
-import re
 import random
 
 
-def clear(tel):
-    cleared_tel = re.sub("[., \-()+]", "", tel)
-    return cleared_tel
-
-
+# проверка для случайно выбранного контакта
+# совпадения телефонов на главной странице и на странице редактирования
 def test_phones_on_home_page(app):
     index = random.randrange(app.contact.count())
     contact_from_home_page = app.contact.get_contacts_list()[index]
     contact_from_edit_page = app.contact.get_contact_from_edit_page(index)
-    print("\n%s == %s" % (contact_from_home_page.firstname, contact_from_edit_page.firstname))
-    print("\n%s == %s" % (contact_from_home_page.lastname, contact_from_edit_page.lastname))
-    print("\n%s == %s" % (clear(contact_from_home_page.homephone), clear(contact_from_edit_page.homephone)))
-    print("\n%s == %s" % (clear(contact_from_home_page.mobilephone), clear(contact_from_edit_page.mobilephone)))
-    print("\n%s == %s" % (clear(contact_from_home_page.workphone), clear(contact_from_edit_page.workphone)))
-    print("\n%s == %s" % (clear(contact_from_home_page.phone2), clear(contact_from_edit_page.phone2)))
-
+    # склейка телефонов, полученных со страницы редактирования
+    all_phones_from_edit_page = app.contact.merge_phones_from_edit_like_on_home(contact_from_edit_page)
+    # тестовая печать
+    print("\nEdit page: %s" % app.contact.clear_phones(all_phones_from_edit_page))
+    print("\nHome page: %s" % app.contact.clear_phones(contact_from_home_page.all_phones_from_homepage))
+    # проверяем вначале, тот ли это контакт
     assert contact_from_home_page.contact_id == contact_from_edit_page.contact_id
-    assert clear(contact_from_home_page.homephone) == clear(contact_from_edit_page.homephone)
-    assert clear(contact_from_home_page.mobilephone) == clear(contact_from_edit_page.mobilephone)
-    assert clear(contact_from_home_page.workphone) == clear(contact_from_edit_page.workphone)
-    assert clear(contact_from_home_page.phone2) == clear(contact_from_edit_page.phone2)
+    # проверка телефонов
+    assert app.contact.clear_phones(contact_from_home_page.all_phones_from_homepage) == \
+           app.contact.clear_phones(all_phones_from_edit_page)
 
 
+# проверка для случайно выбранного контакта
+# совпадения телефонов на странице просмотра и на странице редактирования
 def test_phones_on_view_page(app):
     index = random.randrange(app.contact.count())
-    contact_from_view_page = app.contact.get_contact_from_view_page(index)
+    contact_from_view_page = app.contact.get_all_content_from_view_page(index)
     contact_from_edit_page = app.contact.get_contact_from_edit_page(index)
-    print("\n%s %s" % (contact_from_edit_page.firstname, contact_from_edit_page.lastname))
-    print("\n%s == %s" % (clear(contact_from_view_page.homephone), clear(contact_from_edit_page.homephone)))
-    print("\n%s == %s" % (clear(contact_from_view_page.mobilephone), clear(contact_from_edit_page.mobilephone)))
-    print("\n%s == %s" % (clear(contact_from_view_page.workphone), clear(contact_from_edit_page.workphone)))
-    print("\n%s == %s" % (clear(contact_from_view_page.phone2), clear(contact_from_edit_page.phone2)))
+    all_phones_from_edit_page = merge_phones_from_edit_like_on_viewpage(contact_from_edit_page)
+    secondary_phone_from_edit = secondary_phone_from_edit_like_on_viewpage(contact_from_edit_page)
+
+    # тестовая печать
+    print("\nEdit page: %s" % all_phones_from_edit_page)
+    print("\nEdit page: %s" % secondary_phone_from_edit)
+
+    print("\nView page:\n %s" % contact_from_view_page.all_content_from_viewpage)
+
+    print("\nSearch Res 1:\n %s" % contact_from_view_page.all_content_from_viewpage.find(all_phones_from_edit_page))
+    print("\nSearch Res 2:\n %s" % contact_from_view_page.all_content_from_viewpage.find(secondary_phone_from_edit))
 
     assert contact_from_view_page.contact_id == contact_from_edit_page.contact_id
-    assert clear(contact_from_view_page.homephone) == clear(contact_from_edit_page.homephone)
-    assert clear(contact_from_view_page.mobilephone) == clear(contact_from_edit_page.mobilephone)
-    assert clear(contact_from_view_page.workphone) == clear(contact_from_edit_page.workphone)
-    assert clear(contact_from_view_page.phone2) == clear(contact_from_edit_page.phone2)
+    assert contact_from_view_page.all_content_from_viewpage.find(all_phones_from_edit_page) >= 0 and \
+           contact_from_view_page.all_content_from_viewpage.find(secondary_phone_from_edit) >= 0
+
+
+# склеивание телефонов со страницы редакторования в единый блок, как на странице просмотра (без секондари телефона)
+def merge_phones_from_edit_like_on_viewpage(contact):
+    prefixes = ["H: ", "M: ", "W: "]
+    phones = [contact.homephone, contact.mobilephone, contact.workphone]
+    merged_phones = ""
+    for i in range(0, len(phones)):
+        if phones[i] != '':
+            merged_phones = merged_phones + ("\n%s%s" % (str(prefixes[i]), phones[i]))
+    # print("Merged phones: \n" + str(merged_phones))
+    return merged_phones
+
+
+# форматирование секондари-телефона со страницы редактирования так,
+# чтобы можно было сравнить со страницей просмотра для уменьшения
+# вероятности ложного срабатывания на P:
+def secondary_phone_from_edit_like_on_viewpage(contact):
+    if contact.phone2 is '':
+        return contact.phone2
+    else:
+        return "P: " + contact.phone2
+
 

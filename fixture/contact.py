@@ -133,19 +133,17 @@ class ContactHelper:
             self.contacts_cache = []
             for element in wd.find_elements_by_css_selector("tr[name='entry']"):
                 tds = element.find_elements_by_css_selector("td")
-                textid = tds[0].find_element_by_css_selector("input[name='selected[]']").get_attribute("value")
-                textlast = tds[1].get_attribute("innerText")
-                textfirst = tds[2].get_attribute("innerText")
-                phones = re.split("\n", tds[5].get_attribute("innerText"))
-                homephone = phones[0]
-                mobilephone = phones[1]
-                workphone = phones[2]
-                phone2 = phones[3]
-                # print("Contact list ID: %s / Last: %s / First: %s" % (str(textid), textlast, textfirst))
-                # print("Home: %s / Mobile: %s / Work: %s / Phone2 %s" % (homephone, mobilephone, workphone, phone2))
-                self.contacts_cache.append(Contact(firstname=textfirst, lastname=textlast, contact_id=textid,
-                                                   homephone=homephone, mobilephone=mobilephone,
-                                                   workphone=workphone, phone2=phone2))
+                id = tds[0].find_element_by_css_selector("input[name='selected[]']").get_attribute("value")
+                last = tds[1].get_attribute("innerText")
+                first = tds[2].get_attribute("innerText")
+                address = tds[3].get_attribute("innerText")
+                all_emails = tds[4].get_attribute("innerText")
+                all_phones = tds[5].get_attribute("innerText")
+                # print("Contact list ID: %s / Last: %s / First: %s" % (str(id), last, first))
+                # print("Contact address %s" % address)
+                # print("All phones %s" % all_phones)
+                self.contacts_cache.append(Contact(firstname=first, lastname=last, contact_id=id, address=address,
+                                                   all_phones_from_homepage=all_phones, all_emails_from_homepage=all_emails))
         return list(self.contacts_cache)
 
     def get_contact_from_edit_page(self, index):
@@ -156,13 +154,15 @@ class ContactHelper:
         contact.contact_id = wd.find_element_by_name("id").get_attribute("value")
         contact.firstname = wd.find_element_by_name("firstname").get_attribute("value")
         contact.lastname = wd.find_element_by_name("lastname").get_attribute("value")
+        contact.address =  wd.find_element_by_name("address").get_attribute("value")
         contact.homephone = wd.find_element_by_name("home").get_attribute("value")
         contact.mobilephone = wd.find_element_by_name("mobile").get_attribute("value")
         contact.workphone = wd.find_element_by_name("work").get_attribute("value")
         contact.phone2 = wd.find_element_by_name("phone2").get_attribute("value")
-        print("\nFrom Edit page:\n ID: %s H: %s / M:%s / W: %s / P: %s" % (contact.contact_id, contact.homephone,
-                                                                           contact.mobilephone, contact.workphone,
-                                                                           contact.phone2))
+        contact.email = wd.find_element_by_name("email").get_attribute("value")
+        contact.email2 = wd.find_element_by_name("email2").get_attribute("value")
+        contact.email3 = wd.find_element_by_name("email3").get_attribute("value")
+        # print("\nFrom Edit page:\n 1: %s 2: %s / 3:%s" % (contact.email, contact.email2, contact.email3))
         return contact
 
     def get_contact_from_view_page(self, index):
@@ -172,15 +172,35 @@ class ContactHelper:
         content = wd.find_element_by_id("content").text
         contact = Contact()
         contact.contact_id = wd.find_element_by_name("id").get_attribute("value")
-        contact.homephone = re.sub("H:", "", re.search("H: (.*)", content).group(0))
+        contact.content_from_view_page = re.sub("H:", "", re.search("H: (.*)", content).group(0))
         contact.mobilephone = re.sub("M:", "", re.search("M: (.*)", content).group(0))
         contact.workphone = re.sub("W:", "", re.search("W: (.*)", content).group(0))
         contact.phone2 = re.sub("P:", "", re.search("P: (.*)", content).group(0))
-        print("\nFrom View page:\n ID: %s H: %s / M:%s / W: %s / P: %s" % (contact.contact_id, contact.homephone,
-                                                                           contact.mobilephone, contact.workphone,
-                                                                           contact.phone2))
+        # print("\nFrom View page:\n ID: %s H: %s / M:%s / W: %s / P: %s" % (contact.contact_id, contact.homephone,
+        #                                                                    contact.mobilephone, contact.workphone,
+        #                                                                    contact.phone2))
         return contact
 
+    def get_all_content_from_view_page(self, index):
+        wd = self.app.wd
+        self.open_contacts_page()
+        self.open_view_contact_page(index)
+        contact = Contact()
+        contact.contact_id = wd.find_element_by_name("id").get_attribute("value")
+        contact.all_content_from_viewpage = wd.find_element_by_id("content").text
+        # print("\nID %s:\n Content:\n %s" % (contact.contact_id, contact.all_content_from_viewpage))
+        return contact
+
+    def clear_phones(self, tel):
+        cleared_tel = re.sub("[., \-()+]", "", tel)
+        return cleared_tel
+
+
+    # склеивание телефонов со страницы редакторования в единый блок, как на домашней странице
+    def merge_phones_from_edit_like_on_home(self, contact):
+        merged_phones = "\n".join(
+            filter(lambda x: x != "", [contact.homephone, contact.mobilephone, contact.workphone, contact.phone2]))
+        return merged_phones
 
     # def print_css_locator(self):
     #     wd = self.app.wd
