@@ -1,4 +1,5 @@
 from sys import maxsize
+from model.technical import clear_extra_spaces
 
 
 class Group:
@@ -9,10 +10,11 @@ class Group:
         self.group_id = group_id
 
     def __repr__(self):
-        return "%s: %s" % (self.group_id, self.name)
+        return "%s: %s, %s, %s" % (self.group_id, self.name, self.header, self.footer)
 
     def __eq__(self, other):
-        return (self.group_id is None or other.group_id is None or self.group_id == other.group_id) and self.name == other.name
+        return (self.group_id is None or other.group_id is None or self.group_id == other.group_id) and \
+               clear_extra_spaces(self.name) == clear_extra_spaces(other.name)
 
     def id_or_max(self):
         if self.group_id:

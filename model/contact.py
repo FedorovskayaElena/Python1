@@ -1,4 +1,5 @@
 from sys import maxsize
+from model.technical import clear_extra_spaces
 
 
 class Contact:
@@ -38,17 +39,18 @@ class Contact:
         self.all_emails_from_homepage = all_emails_from_homepage
         self.all_content_from_viewpage = all_content_from_viewpage
 
-
     def __eq__(self, other):
         return (self.contact_id is None or other.contact_id is None or self.contact_id == other.contact_id) and \
-               self.firstname == other.firstname and self.lastname == other.lastname
+               clear_extra_spaces(self.firstname) == clear_extra_spaces(other.firstname) and \
+               clear_extra_spaces(self.lastname) == clear_extra_spaces(other.lastname)
 
     def __repr__(self):
-        return "%s: %s %s" % (self.contact_id, self.firstname, self.lastname)
+        return "ID:%s/FN:%s/LN:%s" % (self.contact_id, self.firstname, self.lastname)
 
     def id_or_max(self):
         if self.contact_id:
             return int(self.contact_id)
         else:
             return maxsize
+
 
