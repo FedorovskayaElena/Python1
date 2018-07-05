@@ -195,14 +195,8 @@ class ContactHelper:
         cleared_tel = re.sub("[., \-()+]", "", tel)
         return cleared_tel
 
-
     # склеивание телефонов со страницы редакторования в единый блок, как на домашней странице
     def merge_phones_from_edit_like_on_home(self, contact):
         merged_phones = "\n".join(
             filter(lambda x: x != "", [contact.homephone, contact.mobilephone, contact.workphone, contact.phone2]))
         return merged_phones
-
-    # def print_css_locator(self):
-    #     wd = self.app.wd
-    #     elements = wd.find_elements_by_css_selector("tr[name='entry']")
-    #     print(elements[0].find_element_by_css_selector("td:nth-child(7) > a").get_attribute("href"))

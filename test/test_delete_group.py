@@ -4,7 +4,7 @@ from random import randrange
 import pytest
 
 
-test_data = [i for i in range(8)]
+test_data = [i for i in range(3)]
 
 
 @pytest.mark.parametrize("number", test_data)
