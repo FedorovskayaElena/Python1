@@ -1,6 +1,6 @@
-import time
 from model.contact import Contact
 import re
+from model.technical import clear_extra_spaces
 
 
 class ContactHelper:
@@ -17,9 +17,7 @@ class ContactHelper:
         self.select_contact_by_index(index)
         # click Delete button
         wd.find_element_by_xpath("//input[@value='Delete']").click()
-        time.sleep(1)
         wd.switch_to_alert().accept()
-        time.sleep(1)
         self.contacts_cache = None
         self.open_contacts_page()
 
@@ -193,7 +191,7 @@ class ContactHelper:
 
     def clear_phones(self, tel):
         cleared_tel = re.sub("[., \-()+]", "", tel)
-        return cleared_tel
+        return clear_extra_spaces(cleared_tel)
 
     # склеивание телефонов со страницы редакторования в единый блок, как на домашней странице
     def merge_phones_from_edit_like_on_home(self, contact):

@@ -1,4 +1,5 @@
 import random
+from model.technical import clear_extra_spaces
 
 
 # проверка для случайно выбранного контакта
@@ -49,7 +50,7 @@ def merge_phones_from_edit_like_on_viewpage(contact):
     merged_phones = ""
     for i in range(0, len(phones)):
         if phones[i] != '':
-            merged_phones = merged_phones + ("\n%s%s" % (str(prefixes[i]), phones[i]))
+            merged_phones = merged_phones + ("\n%s%s" % (str(prefixes[i]), clear_extra_spaces(phones[i])))
     # print("Merged phones: \n" + str(merged_phones))
     return merged_phones
 
@@ -61,6 +62,6 @@ def secondary_phone_from_edit_like_on_viewpage(contact):
     if contact.phone2 is '':
         return contact.phone2
     else:
-        return "P: " + contact.phone2
+        return "P: " + clear_extra_spaces(contact.phone2)
 
 
