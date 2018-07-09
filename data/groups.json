@@ -1,0 +1,37 @@
+[
+  {
+    "py/object": "model.group.Group",
+    "footer": "Футер группы в полосатых купальниках",
+    "group_id": null,
+    "header": "Хедер группы в полосатых купальниках",
+    "name": "Группа в полосатых купальниках"
+  },
+  {
+    "py/object": "model.group.Group",
+    "footer": "zfooter",
+    "group_id": null,
+    "header": "iBrkZxKZR 7A00Utc header",
+    "name": "YZpJALpname"
+  },
+  {
+    "py/object": "model.group.Group",
+    "footer": "LFVM74 uAieEfooter",
+    "group_id": null,
+    "header": "gXBBQM9header",
+    "name": "rSebXh6H  name"
+  },
+  {
+    "py/object": "model.group.Group",
+    "footer": "GeOdC9J 0N0idW1eDIgfooter",
+    "group_id": null,
+    "header": "jV vo6Hkjk Eheader",
+    "name": "a6msname"
+  },
+  {
+    "py/object": "model.group.Group",
+    "footer": "bXlJCA Ux5UKVNfooter",
+    "group_id": null,
+    "header": "wJ TAGocdIheader",
+    "name": "LA 7aname"
+  }
+]
