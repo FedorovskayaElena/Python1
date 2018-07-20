@@ -25,6 +25,7 @@ def test_delete_contact(app, db, number, check_ui):
     assert old_contacts_list == new_contacts_list
     if check_ui:
         assert new_contacts_list == sorted(app.contact.get_contacts_list(), key=lambda c: c.id_or_max())
+        print("check UI")
 
 
 

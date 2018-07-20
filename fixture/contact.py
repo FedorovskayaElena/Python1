@@ -217,12 +217,5 @@ class ContactHelper:
         # print("\nID %s:\n Content:\n %s" % (contact.contact_id, contact.all_content_from_viewpage))
         return contact
 
-    def clear_phones(self, tel):
-        cleared_tel = re.sub("[., \-()+]", "", tel)
-        return clear_extra_spaces(cleared_tel)
 
-    # склеивание телефонов со страницы редакторования в единый блок, как на домашней странице
-    def merge_phones_from_edit_like_on_home(self, contact):
-        merged_phones = "\n".join(
-            filter(lambda x: x != "", [contact.homephone, contact.mobilephone, contact.workphone, contact.phone2]))
-        return merged_phones
+

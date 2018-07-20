@@ -1,5 +1,6 @@
 from sys import maxsize
 from model.technical import clear_extra_spaces
+from model.technical import clear_phones
 
 
 class Contact:
@@ -42,7 +43,8 @@ class Contact:
     def __eq__(self, other):
         return (self.contact_id is None or other.contact_id is None or str(self.contact_id) == str(other.contact_id)) and \
                clear_extra_spaces(self.firstname) == clear_extra_spaces(other.firstname) and \
-               clear_extra_spaces(self.lastname) == clear_extra_spaces(other.lastname)
+               clear_extra_spaces(self.lastname) == clear_extra_spaces(other.lastname) and \
+               clear_extra_spaces(self.address) == clear_extra_spaces(other.address)
 
     def __repr__(self):
         return "ID:%s/FN:%s/LN:%s" % (self.contact_id, self.firstname, self.lastname)
@@ -132,5 +134,21 @@ class Contact:
             self.photopath = new.photopath
         if new.contact_id is not None:
             self.contact_id = new.contact_id
-
         return self
+
+    # склеивание телефонов из базы в единый блок, как на домашней странице
+    def merge_cleaned_phones_like_on_home(self):
+        merged_phones = "\n".join(filter(lambda x: x != "", [self.homephone, self.mobilephone, self.workphone, self.phone2]))
+        return clear_phones(merged_phones)
+
+    # склеивание email-ов из базы в единый блок, как на домашней странице
+    def merge_cleaned_emails_like_on_home(self):
+        merged_emails = "\n".join(filter(lambda x: x != "", [clear_extra_spaces(self.email),
+                                                             clear_extra_spaces(self.email2),
+                                                             clear_extra_spaces(self.email3)]))
+        return merged_emails
+
+    # склеивание телефонов со страницы редакторования в единый блок, как на домашней странице
+    def merge_phones_from_edit_like_on_home(self):
+        merged_phones = "\n".join(filter(lambda x: x != "", [self.homephone, self.mobilephone, self.workphone, self.phone2]))
+        return clear_phones(merged_phones)
