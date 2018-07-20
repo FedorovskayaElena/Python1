@@ -14,13 +14,14 @@ def test_modify_group(app, db, number, check_ui):
     old_groups_list = db.get_groups_list()
     modify_group = choice(old_groups_list)
     print("Random index: %s" % str(modify_group.group_id))
-    new_group = Group(name="Четверговая %s" % str(number), group_id=modify_group.group_id)
-    app.group.modify_by_id(new_group, modify_group.group_id)
+    new_group_fields = Group(name="Замена имени %s" % str(number), header="Замена хедера %s" % str(number),
+                             footer="Замена футера %s" % str(number), group_id=modify_group.group_id)
+    app.group.modify_by_id(new_group_fields, modify_group.group_id)
 
     new_groups_list = db.get_groups_list()
-    # удаляем и заменяем на новую
+    # заменяем поля нужной группы на новые значения
     modify_index = old_groups_list.index(modify_group)
-    old_groups_list[modify_index].name = new_group.name
+    old_groups_list[modify_index].copy_not_null_fields_from_group(new_group_fields)
 
     assert sorted(old_groups_list, key=lambda g: g.group_id) == new_groups_list
 

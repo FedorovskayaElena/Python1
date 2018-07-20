@@ -33,5 +33,13 @@ class Group:
             self.group_id = int(self.group_id)
         return self
 
-
-
+    def copy_not_null_fields_from_group(self, new):
+        if new.name is not None:
+            self.name = new.name
+        if new.header is not None:
+            self.header = new.header
+        if new.footer is not None:
+            self.footer = new.footer
+        if new.group_id is not None:
+            self.group_id = new.group_id
+        return self

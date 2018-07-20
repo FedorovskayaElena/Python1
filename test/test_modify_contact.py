@@ -17,12 +17,15 @@ def test_modify_contact(app, db, number, check_ui):
     old_contacts_list = db.get_contacts_list()
     modified_contact = choice(old_contacts_list)
     print("Random index: %s" % str(modified_contact.contact_id))
-    new_contact_fields = Contact(firstname="Четверговое имя   %s" % str(number), contact_id=modified_contact.contact_id)
+    new_contact_fields = Contact(lastname=" Фамилие с отступом   %s" % str(number),
+                                 address="и адресок тоже новый %s" % str(number),
+                                 contact_id=modified_contact.contact_id)
     app.contact.modify_by_id(new_contact_fields, modified_contact.contact_id)
     new_contacts_list = db.get_contacts_list()
 
+    # заменяем поля нужного контакта на новые значения
     modify_index = old_contacts_list.index(modified_contact)
-    old_contacts_list[modify_index].firstname = new_contact_fields.firstname
+    old_contacts_list[modify_index].copy_not_null_fields_from_contact(new_contact_fields)
 
     #  сортируем только список, который сами модифицировали
     assert sorted(old_contacts_list, key=lambda g: g.contact_id) == new_contacts_list

@@ -79,5 +79,58 @@ class Contact:
             self.contact_id = int(self.contact_id)
         return self
 
+    def copy_not_null_fields_from_contact(self, new):
+        if new.firstname is not None:
+            self.firstname = new.firstname
+        if new.initials is not None:
+            self.initials = new.initials
+        if new.lastname is not None:
+            self.lastname = new.lastname
+        if new.nickname is not None:
+            self.nickname = new.nickname
+        if new.title is not None:
+            self.title = new.title
+        if new.company is not None:
+            self.company = new.company
+        if new.address is not None:
+            self.address = new.address
+        if new.homephone is not None:
+            self.homephone = new.homephone
+        if new.mobilephone is not None:
+            self.mobilephone = new.mobilephone
+        if new.workphone is not None:
+            self.workphone = new.workphone
+        if new.fax is not None:
+            self.fax = new.fax
+        if new.email is not None:
+            self.email = new.email
+        if new.email2 is not None:
+            self.email2 = new.email2
+        if new.email3 is not None:
+            self.email3 = new.email3
+        if new.homepage is not None:
+            self.homepage = new.homepage
+        if new.bdayoption is not None:
+            self.bdayoption = new.bdayoption
+        if new.bmonthoption is not None:
+            self.bmonthoption = new.bmonthoption
+        if new.byear is not None:
+            self.byear = new.byear
+        if new.adayoption is not None:
+            self.adayoption = new.adayoption
+        if new.amonthoption is not None:
+            self.amonthoption = new.amonthoption
+        if new.ayear is not None:
+            self.ayear = new.ayear
+        if new.address2 is not None:
+            self.address2 = new.address2
+        if new.phone2 is not None:
+            self.phone2 = new.phone2
+        if new.notes is not None:
+            self.notes = new.notes
+        if new.photopath is not None:
+            self.photopath = new.photopath
+        if new.contact_id is not None:
+            self.contact_id = new.contact_id
 
-
+        return self
