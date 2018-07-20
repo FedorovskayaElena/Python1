@@ -18,6 +18,7 @@ class Application:
         self.contact = ContactHelper(self)
         self.baseURL = baseURL
 
+
     def open_home_page(self):
         wd = self.wd
         if not (wd.current_url.endswith("/index.php") and len(wd.find_elements_by_id("LoginForm")) > 0):

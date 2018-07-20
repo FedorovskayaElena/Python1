@@ -21,6 +21,17 @@ class ContactHelper:
         self.contacts_cache = None
         self.open_contacts_page()
 
+    def delete_by_id(self, id):
+        wd = self.app.wd
+        self.open_contacts_page()
+        # select first contact
+        self.select_contact_by_id(id)
+        # click Delete button
+        wd.find_element_by_xpath("//input[@value='Delete']").click()
+        wd.switch_to_alert().accept()
+        self.contacts_cache = None
+        self.open_contacts_page()
+
     def create(self, contact):
         wd = self.app.wd
         self.open_contacts_page()
@@ -39,6 +50,19 @@ class ContactHelper:
         self.select_contact_by_index(index)
         # click Edit button
         wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[%s]/td[8]/a" % str(2 + index)).click()
+        self.fill_contact_fields(contact)
+        # клик по кнопке Update
+        wd.find_element_by_name("update").click()
+        self.contacts_cache = None
+        self.open_contacts_page()
+
+    def modify_by_id(self, contact, id):
+        wd = self.app.wd
+        self.open_contacts_page()
+        self.select_contact_by_id(id)
+        # click Edit button
+        # XPATH в виде //a[@href='edit.php?id=781'] или //input[@value='781']/../../td[8]/a
+        wd.find_element_by_xpath("//a[@href='edit.php?id=%s']" % str(id)).click()
         self.fill_contact_fields(contact)
         # клик по кнопке Update
         wd.find_element_by_name("update").click()
@@ -70,6 +94,10 @@ class ContactHelper:
     def select_contact_by_index(self, index):
         wd = self.app.wd
         wd.find_elements_by_name("selected[]")[index].click()
+
+    def select_contact_by_id(self, id):
+        wd = self.app.wd
+        wd.find_element_by_xpath("//input[@value='%s']" % str(id)).click()
 
     def type_in_field(self, field_name, text):
         wd = self.app.wd

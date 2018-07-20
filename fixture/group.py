@@ -17,6 +17,15 @@ class GroupHelper:
         self.group_cache = None
         self.open_groups_page()
 
+    def delete_by_id(self, id):
+        wd = self.app.wd
+        self.open_groups_page()
+        self.select_group_by_id(id)
+        # click Delete button
+        wd.find_element_by_xpath("//input[@value='Delete group(s)']").click()
+        self.group_cache = None
+        self.open_groups_page()
+
     def create(self, group):
         wd = self.app.wd
         self.open_groups_page()
@@ -33,6 +42,18 @@ class GroupHelper:
         wd = self.app.wd
         self.open_groups_page()
         self.select_group_by_index(index)
+        # click Edit
+        wd.find_element_by_name("edit").click()
+        self.fill_group_fields(group)
+        # click Update button
+        wd.find_element_by_name("update").click()
+        self.group_cache = None
+        self.open_groups_page()
+
+    def modify_by_id(self, group, id):
+        wd = self.app.wd
+        self.open_groups_page()
+        self.select_group_by_id(id)
         # click Edit
         wd.find_element_by_name("edit").click()
         self.fill_group_fields(group)
@@ -60,6 +81,10 @@ class GroupHelper:
         wd = self.app.wd
         wd.find_elements_by_name("selected[]")[index].click()
 
+    def select_group_by_id(self, id):
+        wd = self.app.wd
+        wd.find_element_by_xpath("//input[@value='%s']" % str(id)).click()
+
     def open_groups_page(self):
         wd = self.app.wd
         if not (wd.current_url.endswith("/group.php") and len(wd.find_elements_by_name("new")) > 0):
@@ -82,5 +107,4 @@ class GroupHelper:
                 id = element.find_element_by_name("selected[]").get_attribute("value")
                 self.group_cache.append(Group(name=text, group_id=id))
         return list(self.group_cache)
-
 

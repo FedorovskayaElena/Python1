@@ -1,0 +1,14 @@
+# проверка работоспособности соединения с базой данных
+
+import pymysql.cursors
+
+connection = pymysql.connect(host='127.0.0.1', database='addressbook', user='root', password='')
+
+try:
+    cursor = connection.cursor()
+    cursor.execute("select group_id, group_name from group_list where group_name like ' %' OR group_name like '% ' ")
+    for row in cursor.fetchall():
+        print("id='%s', name='%s'" % (row[0], row[1]))
+finally:
+    connection.close()
+

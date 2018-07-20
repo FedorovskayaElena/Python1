@@ -63,8 +63,8 @@ else:
                      fax=random_string("fax", 20),
                      email=random_string("email", 20), email2=random_string("email2", 20),
                      email3=random_string("email3", 20), homepage=random_string("homepage", 20),
-                     bdayoption=random_days_months(1, 32), bmonthoption=random_days_months(1, 14), byear=random_string("homepage", 4),
-                     adayoption=random_days_months(1, 32), amonthoption=random_days_months(1, 14), ayear=random_string("homepage", 4),
+                     bdayoption=random_days_months(1, 32), bmonthoption=random_days_months(1, 14), byear=random_string("", 4),
+                     adayoption=random_days_months(1, 32), amonthoption=random_days_months(1, 14), ayear=random_string("", 4),
                      address2=random_string("address2", 20), phone2=random_string("phone2", 20),
                      notes=random_string("notes", 100)) for i in range(n-1)]
 

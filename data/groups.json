@@ -1,6 +1,13 @@
 [
   {
     "py/object": "model.group.Group",
+    "footer": "  Футер  ",
+    "group_id": null,
+    "header": " Хедер группы   с лишними  пробелами . ",
+    "name": "   Группа с лишними про  белам  и  ! "
+  },
+  {
+    "py/object": "model.group.Group",
     "footer": "Футер группы в полосатых купальниках",
     "group_id": null,
     "header": "Хедер группы в полосатых купальниках",

@@ -1,44 +1,34 @@
 # -*- coding: utf-8 -*-
 from model.group import Group
-from random import randrange
+from random import choice
+import pytest
 
 
-def test_modify_group(app):
+test_data = [i for i in range(2)]
+
+
+@pytest.mark.parametrize("number", test_data)
+def test_modify_group(app, db, number, check_ui):
     if app.group.count() == 0:
         app.group.create(Group("Added from test_modify", "Header 2", "Footer 2"))
-    old_groups_list = app.group.get_groups_list()
-    modify_index = randrange(len(old_groups_list))
-    print("Random index 1: %s" % str(modify_index))
-    new_group = Group(name="Измененная 1", group_id=old_groups_list[modify_index].group_id)
-    app.group.modify_by_index(new_group, modify_index)
-    assert len(old_groups_list) == app.group.count()
-    new_groups_list = app.group.get_groups_list()
-    print("\n%s\n%s" % (old_groups_list, new_groups_list))
-    old_groups_list[modify_index] = new_group
-    print("Modified: %s" % old_groups_list)
-    print("Sorted:\n%s\n%s" % (sorted(old_groups_list, key=lambda g: g.group_id),
-                               sorted(new_groups_list, key=lambda g: g.group_id)))
-    assert sorted(old_groups_list, key=lambda g: g.group_id) == sorted(new_groups_list, key=lambda g: g.group_id)
+    old_groups_list = db.get_groups_list()
+    modify_group = choice(old_groups_list)
+    print("Random index: %s" % str(modify_group.group_id))
+    new_group = Group(name="Четверговая %s" % str(number), group_id=modify_group.group_id)
+    app.group.modify_by_id(new_group, modify_group.group_id)
 
+    new_groups_list = db.get_groups_list()
+    # удаляем и заменяем на новую
+    modify_index = old_groups_list.index(modify_group)
+    old_groups_list[modify_index].name = new_group.name
 
-def test_modify_group_1(app):
-    if app.group.count() == 0:
-        app.group.create(Group("Added from test_modify", "Header 2", "Footer 2"))
-    old_groups_list = app.group.get_groups_list()
-    modify_index = randrange(len(old_groups_list))
-    print("Random index 1: %s" % str(modify_index))
-    new_group = Group(name="Измененная 2", group_id=old_groups_list[modify_index].group_id)
-    app.group.modify_by_index(new_group, modify_index)
-    assert len(old_groups_list) == app.group.count()
-    new_groups_list = app.group.get_groups_list()
-    print("\n%s\n%s" % (old_groups_list, new_groups_list))
-    old_groups_list[modify_index] = new_group
-    print("Modified: %s" % old_groups_list)
-    print("Sorted:\n%s\n%s" % (sorted(old_groups_list, key=lambda g: g.group_id),
-                               sorted(new_groups_list, key=lambda g: g.group_id)))
-    assert sorted(old_groups_list, key=lambda g: g.group_id) == sorted(new_groups_list, key=lambda g: g.group_id)
+    assert sorted(old_groups_list, key=lambda g: g.group_id) == new_groups_list
 
-# def test_modify_group_name(app):
-#     if app.group.count() == 0:
-#         app.group.create(Group("AAAAdded from test_modify_group_name", "Header 2", "Footer 2"))
-#     app.group.modify_first(Group("Absolutely New Name 1"))
+    # а вот список из интерфейса надо сортировать
+    # # и раз в интерфейсе пробелмы чистятся, то лучше и наши оба списка от пробелов почистить
+    if check_ui:
+        new_groups_list_cleaned = [g.clean_group() for g in new_groups_list]
+        ui_groups_list_cleaned = [g.clean_group() for g in app.group.get_groups_list()]
+        assert new_groups_list_cleaned == sorted(ui_groups_list_cleaned, key=lambda gr: gr.id_or_max())
+        print("Checked UI")
+

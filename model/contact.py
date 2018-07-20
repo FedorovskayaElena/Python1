@@ -40,7 +40,7 @@ class Contact:
         self.all_content_from_viewpage = all_content_from_viewpage
 
     def __eq__(self, other):
-        return (self.contact_id is None or other.contact_id is None or self.contact_id == other.contact_id) and \
+        return (self.contact_id is None or other.contact_id is None or str(self.contact_id) == str(other.contact_id)) and \
                clear_extra_spaces(self.firstname) == clear_extra_spaces(other.firstname) and \
                clear_extra_spaces(self.lastname) == clear_extra_spaces(other.lastname)
 
@@ -52,5 +52,32 @@ class Contact:
             return int(self.contact_id)
         else:
             return maxsize
+
+    def clean_contact(self, id_transfer_to_int=False):
+        if self.firstname is not None:
+            self.firstname = clear_extra_spaces(self.firstname)
+        if self.lastname is not None:
+            self.lastname = clear_extra_spaces(self.lastname)
+        if self.address is not None:
+            self.address = clear_extra_spaces(self.address)
+        if self.email is not None:
+            self.email = clear_extra_spaces(self.email)
+        if self.email2 is not None:
+            self.email2 = clear_extra_spaces(self.email2)
+        if self.email3 is not None:
+            self.email3 = clear_extra_spaces(self.email3)
+        if self.homephone is not None:
+            self.homephone = clear_extra_spaces(self.homephone)
+        if self.mobilephone is not None:
+            self.mobilephone = clear_extra_spaces(self.mobilephone)
+        if self.workphone is not None:
+            self.workphone = clear_extra_spaces(self.workphone)
+        if self.phone2 is not None:
+            self.phone2 = clear_extra_spaces(self.phone2)
+
+        if id_transfer_to_int:
+            self.contact_id = int(self.contact_id)
+        return self
+
 
 

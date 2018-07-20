@@ -1,50 +1,38 @@
 # -*- coding: utf-8 -*-
 from model.contact import Contact
-from random import randrange
+from random import choice
+import pytest
 
 
-def test_modify_contact(app):
+test_data = [i for i in range(2)]
+
+
+@pytest.mark.parametrize("number", test_data)
+def test_modify_contact(app, db, number, check_ui):
     if app.contact.count() == 0:
         app.contact.create(Contact(firstname="Revv Марина Added from test_modify", lastname="Петрова",
                            title="Mrs.", company="Nothing", address="Sadovoe 34-34-2", homephone="495 3332211",
                            mobilephone="965 2223344",
                            workphone="965 1112233", fax="965 8889988"))
-    old_contacts_list = app.contact.get_contacts_list()
-    modified_index = randrange(len(old_contacts_list))
-    print("Random index: %s" % str(modified_index))
-    modified_contact = Contact(firstname="Абс новое им 3", lastname=old_contacts_list[modified_index].lastname,
-                               contact_id=old_contacts_list[modified_index].contact_id)
-    app.contact.modify_by_index(modified_contact, modified_index)
-    assert len(old_contacts_list) == app.contact.count()
-    new_contacts_list = app.contact.get_contacts_list()
-    print("\n%s\n%s" % (old_contacts_list, new_contacts_list))
-    old_contacts_list[modified_index] = modified_contact
-    print("Modified:\n%s" % old_contacts_list)
-    print("Sorted:\n%s\n%s" % (sorted(old_contacts_list, key=lambda g: g.contact_id),
-                               sorted(new_contacts_list, key=lambda g: g.contact_id)))
-    assert sorted(old_contacts_list, key=lambda g: g.contact_id) == sorted(new_contacts_list, key=lambda g: g.contact_id)
+    old_contacts_list = db.get_contacts_list()
+    modified_contact = choice(old_contacts_list)
+    print("Random index: %s" % str(modified_contact.contact_id))
+    new_contact_fields = Contact(firstname="Четверговое имя   %s" % str(number), contact_id=modified_contact.contact_id)
+    app.contact.modify_by_id(new_contact_fields, modified_contact.contact_id)
+    new_contacts_list = db.get_contacts_list()
 
+    modify_index = old_contacts_list.index(modified_contact)
+    old_contacts_list[modify_index].firstname = new_contact_fields.firstname
 
-def test_modify_contact_1(app):
-    if app.contact.count() == 0:
-        app.contact.create(Contact(firstname="Revv Марина Added from test_modify", lastname="Петрова",
-                           title="Mrs.", company="Nothing", address="Sadovoe 34-34-2", homephone="495 3332211",
-                           mobilephone="965 2223344",
-                           workphone="965 1112233", fax="965 8889988"))
-    old_contacts_list = app.contact.get_contacts_list()
-    modified_index = randrange(len(old_contacts_list))
-    print("Random index 2: %s" % str(modified_index))
-    modified_contact = Contact(firstname="КыИзменение им 4", lastname=old_contacts_list[modified_index].lastname,
-                               contact_id=old_contacts_list[modified_index].contact_id)
-    app.contact.modify_by_index(modified_contact, modified_index)
-    assert len(old_contacts_list) == app.contact.count()
-    new_contacts_list = app.contact.get_contacts_list()
-    print("\n%s\n%s" % (old_contacts_list, new_contacts_list))
-    old_contacts_list[modified_index] = modified_contact
-    print("Modified:\n%s" % old_contacts_list)
-    print("Sorted:\n%s\n%s" % (sorted(old_contacts_list, key=lambda g: g.contact_id),
-                               sorted(new_contacts_list, key=lambda g: g.contact_id)))
-    assert sorted(old_contacts_list, key=lambda g: g.contact_id) == sorted(new_contacts_list, key=lambda g: g.contact_id)
+    #  сортируем только список, который сами модифицировали
+    assert sorted(old_contacts_list, key=lambda g: g.contact_id) == new_contacts_list
+    # а вот список из интерфейса надо сортировать
+    # и раз в интерфейсе пробелмы чистятся, то лучше и наши оба списка от пробелов почистить
+    if check_ui:
+        new_contacts_list_cleaned = [c.clean_contact() for c in new_contacts_list]
+        ui_contacts_list_cleaned = [c.clean_contact() for c in app.contact.get_contacts_list()]
+        assert new_contacts_list_cleaned == sorted(ui_contacts_list_cleaned, key=lambda c: c.id_or_max())
+        print("Checked UI")
 
 
 # def test_modify_contact_all_fields(app):
