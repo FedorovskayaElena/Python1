@@ -1,10 +1,12 @@
 import pytest
 from fixture.application import Application
 from fixture.db import DBFixture
+from fixture.orm import ORMFixture
 import json
 import jsonpickle
 import os.path
 import importlib
+from random import choice
 
 fixture = None
 target = None
@@ -43,6 +45,14 @@ def db(request):
     return dbFixture
 
 
+# Отдельная фикстура для pony orm
+@pytest.fixture(scope="session")
+def orm(request):
+    db_config = load_config(request.config.getoption("--target"))["db"]
+    orm_fixture = ORMFixture(host=db_config["host"], database=db_config["database"],
+                             user=db_config["user"], password=db_config["password"])
+    return orm_fixture
+
 # Отдельная фикстура для финализации
 @pytest.fixture(scope="session", autouse=True)
 def stop(request):
@@ -73,6 +83,9 @@ def pytest_generate_tests(metafunc):
         elif fixture.startswith("json_"):
             testdata = load_from_json(fixture[5:])
             metafunc.parametrize(fixture, testdata, ids=[str(x) for x in testdata])
+        elif fixture.startswith("one_random_json_"):
+            testdata = load_one_random_from_json(fixture[16:])
+            metafunc.parametrize(fixture, testdata, ids=[str(x) for x in testdata])
 
 
 def load_from_module(module):
@@ -84,3 +97,10 @@ def load_from_json(module):
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data/%s.json" % module)) as file:
         testdata = jsonpickle.decode(file.read())
     return testdata
+
+def load_one_random_from_json(module):
+    testdata = []
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data/%s.json" % module)) as file:
+        testdata = jsonpickle.decode(file.read())
+    element = choice(testdata)
+    return [element]

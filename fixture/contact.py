@@ -1,6 +1,5 @@
 from model.contact import Contact
 import re
-from model.technical import clear_extra_spaces
 
 
 class ContactHelper:
@@ -37,6 +36,17 @@ class ContactHelper:
         self.open_contacts_page()
         wd.find_element_by_link_text("add new").click()
         self.fill_contact_fields(contact)
+        wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
+        self.contacts_cache = None
+        self.open_contacts_page()
+
+    def create_contact_in_group(self, contact, group):
+        wd = self.app.wd
+        self.open_contacts_page()
+        wd.find_element_by_link_text("add new").click()
+        self.fill_contact_fields(contact)
+        # выбрать группу с нужным индексом
+        wd.find_element_by_xpath("//select[@name='new_group']/option[@value='%s']" % str(group.group_id)).click()
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
         self.contacts_cache = None
         self.open_contacts_page()
@@ -217,5 +227,26 @@ class ContactHelper:
         # print("\nID %s:\n Content:\n %s" % (contact.contact_id, contact.all_content_from_viewpage))
         return contact
 
+    def link_contact_to_group(self, contact, group):
+        wd = self.app.wd
+        self.open_contacts_page()
+        # select contact
+        self.select_contact_by_id(contact.contact_id)
+        # select group
+        wd.find_element_by_xpath("//select[@name='to_group']/option[@value='%s']" % str(group.group_id)).click()
+        # click Add button
+        wd.find_element_by_xpath("//input[@value='Add to']").click()
+        self.open_contacts_page()
 
-
+    def delete_contact_from_group(self, contact, group):
+        print("Trying to remove\nContact %s\ngroup from %s" % (contact, group))
+        wd = self.app.wd
+        self.open_contacts_page()
+        # select group
+        wd.find_element_by_xpath("//select[@name='group']/option[@value='%s']" % str(group.group_id)).click()
+        # выбрать нужный контакт на странице контактов выбранной группы
+        self.select_contact_by_id(contact.contact_id)
+        # click Remove from group button
+        wd.find_element_by_xpath("//input[contains(@value, 'Remove from')]").click()
+        self.open_contacts_page()
+        print("Result:\n Contact %s\nremoved from %s" % (contact, group))

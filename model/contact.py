@@ -148,7 +148,3 @@ class Contact:
                                                              clear_extra_spaces(self.email3)]))
         return merged_emails
 
-    # склеивание телефонов со страницы редакторования в единый блок, как на домашней странице
-    def merge_phones_from_edit_like_on_home(self):
-        merged_phones = "\n".join(filter(lambda x: x != "", [self.homephone, self.mobilephone, self.workphone, self.phone2]))
-        return clear_phones(merged_phones)

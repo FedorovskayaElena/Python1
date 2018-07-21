@@ -10,7 +10,7 @@ def test_phones_on_home_page(app):
     contact_from_home_page = app.contact.get_contacts_list()[index]
     contact_from_edit_page = app.contact.get_contact_from_edit_page(index)
     # склейка телефонов, полученных со страницы редактирования
-    all_phones_from_edit_page = contact_from_edit_page.merge_phones_from_edit_like_on_home()
+    all_phones_from_edit_page = contact_from_edit_page.merge_cleaned_phones_like_on_home()
     # тестовая печать
     print("\nEdit page: %s" % clear_phones(all_phones_from_edit_page))
     print("\nHome page: %s" % clear_phones(contact_from_home_page.all_phones_from_homepage))
